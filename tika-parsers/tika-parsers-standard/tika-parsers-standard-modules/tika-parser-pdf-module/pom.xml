@@ -86,7 +86,33 @@
 
   <build>
     <plugins>
-      <!-- needs an entry or it will fail?! -->
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>1.19.0</version>
+
+        <dependencies>
+          <dependency>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-junit5-plugin</artifactId>
+            <version>1.2.2</version>
+          </dependency>
+        </dependencies>
+
+        <configuration>
+          <targetClasses>
+            <param>org.apache.tika.parser.pdf.PDFParser</param>
+            <param>org.apache.tika.parser.pdf.PDFMarkedContent2XHTML</param>
+            <param>org.apache.tika.parser.pdf.image.ImageGraphicsEngine</param>
+          </targetClasses>
+
+          <targetTests>
+            <param>org.apache.tika.parser.pdf.PDFParserTest</param>
+            <param>org.apache.tika.parser.pdf.PDFMarkedContent2XHTMLTest</param>
+            <param>org.apache.tika.parser.pdf.PDFRenderingTest</param>
+          </targetTests>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
