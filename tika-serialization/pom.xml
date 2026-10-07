@@ -102,13 +102,6 @@
           </dependency>
         </dependencies>
         <configuration>
-          <targetClasses>
-            <param>org.apache.tika.serialization.ComponentNameResolver</param>
-          </targetClasses>
-
-          <targetTests>
-            <param>org.apache.tika.serialization.ComponentNameResolverTest</param>
-          </targetTests>
         </configuration>
       </plugin>
       <plugin>

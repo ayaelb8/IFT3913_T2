@@ -62,15 +62,6 @@
         </dependencies>
 
         <configuration>
-          <targetClasses>
-            <param>org.apache.tika.parser.ocr.TesseractOCRConfig</param>
-            <param>org.apache.tika.parser.ocr.TesseractOCRParser</param>
-          </targetClasses>
-
-          <targetTests>
-            <param>org.apache.tika.parser.ocr.TesseractOCRConfigTest</param>
-            <param>org.apache.tika.parser.ocr.TesseractOCRParserTest</param>
-          </targetTests>
         </configuration>
       </plugin>
       <plugin>

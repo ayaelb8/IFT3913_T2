@@ -143,6 +143,7 @@
           <targetTests>
             <param>org.apache.tika.mime.MediaTypeTest</param>
           </targetTests>
+
         </configuration>
       </plugin>
       <plugin>

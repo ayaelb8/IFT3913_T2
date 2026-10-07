@@ -157,13 +157,6 @@
           </dependency>
         </dependencies>
         <configuration>
-          <targetClasses>
-            <param>org.apache.tika.parser.microsoft.OutlookExtractor</param>
-          </targetClasses>
-
-          <targetTests>
-            <param>org.apache.tika.parser.microsoft.OutlookParserTest</param>
-          </targetTests>
         </configuration>
       </plugin>
       <plugin>
