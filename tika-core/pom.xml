@@ -119,6 +119,13 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.github.ZJU-ACES-ISE</groupId>
+      <artifactId>chatunitest-starter</artifactId>
+      <version>1.4.0</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -144,6 +151,29 @@
             <param>org.apache.tika.mime.MediaTypeTest</param>
           </targetTests>
 
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>io.github.zju-aces-ise</groupId>
+        <artifactId>chatunitest-maven-plugin</artifactId>
+        <version>2.1.1</version>
+        <configuration>
+          <!-- Local Ollama model: any non-empty string works as the API key -->
+          <apiKeys>ollama</apiKeys>
+          <!-- ChatUniTest only accepts its built-in model names; codeqwen:v1.5-chat is
+               an Ollama alias of qwen2.5-coder:3b (ollama cp qwen2.5-coder:3b codeqwen:v1.5-chat) -->
+          <model>codeqwen:v1.5-chat</model>
+          <url>http://localhost:11434/v1/chat/completions</url>
+          <selectClass>org.apache.tika.mime.MediaType</selectClass>
+          <!-- One request at a time: the local model cannot answer parallel requests
+               within ChatUniTest's fixed 5-minute HTTP timeout -->
+          <thread>false</thread>
+          <!-- Ollama's context is 4096 tokens: keep prompt + response (1024) within it,
+               otherwise Ollama silently truncates the prompt -->
+          <maxPromptTokens>3000</maxPromptTokens>
+          <testNumber>5</testNumber>
+          <maxRounds>5</maxRounds>
+          <temperature>0.5</temperature>
         </configuration>
       </plugin>
       <plugin>
