@@ -187,6 +187,8 @@
 
           <targetTests>
             <param>org.apache.tika.mime.MediaTypeTest</param>
+            <param>org.apache.tika.mime.MediaType_*</param>
+            <param>org.apache.tika.mime.MediaTypeManualTest</param>
           </targetTests>
 
         </configuration>
@@ -196,18 +198,18 @@
         <artifactId>chatunitest-maven-plugin</artifactId>
         <version>2.1.1</version>
         <configuration>
-          <!-- Local Ollama model: any non-empty string works as the API key -->
+          <!-- Modèle local servi par Ollama : n'importe quelle chaîne non vide sert de clé d'API -->
           <apiKeys>ollama</apiKeys>
-          <!-- ChatUniTest only accepts its built-in model names; codeqwen:v1.5-chat is
-               an Ollama alias of qwen2.5-coder:3b (ollama cp qwen2.5-coder:3b codeqwen:v1.5-chat) -->
+          <!-- ChatUniTest n'accepte que ses noms de modèles prédéfinis; codeqwen:v1.5-chat est
+               un alias Ollama de qwen2.5-coder:3b (ollama cp qwen2.5-coder:3b codeqwen:v1.5-chat) -->
           <model>codeqwen:v1.5-chat</model>
           <url>http://localhost:11434/v1/chat/completions</url>
           <selectClass>org.apache.tika.mime.MediaType</selectClass>
-          <!-- One request at a time: the local model cannot answer parallel requests
-               within ChatUniTest's fixed 5-minute HTTP timeout -->
+          <!-- Une requête à la fois : le modèle local ne peut pas répondre à des requêtes
+               parallèles dans le délai HTTP de ChatUniTest, fixé à 5 minutes -->
           <thread>false</thread>
-          <!-- Ollama's context is 4096 tokens: keep prompt + response (1024) within it,
-               otherwise Ollama silently truncates the prompt -->
+          <!-- Le contexte d'Ollama est de 4096 tokens : la demande et la réponse (1024) doivent
+               y tenir, sinon Ollama tronque la demande sans le signaler -->
           <maxPromptTokens>3000</maxPromptTokens>
           <testNumber>5</testNumber>
           <maxRounds>5</maxRounds>

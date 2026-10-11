@@ -1,0 +1,83 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Tâche 2 (IFT3913) : exécute les tests de la classe MediaType de tika-core,
+# c'est-à-dire les tests d'origine, les tests générés par ChatUniTest (corrigés)
+# et les tests écrits à la main, puis l'analyse de mutation PIT.
+name: tache 2 - tests MediaType
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Permet de lancer le workflow à la main depuis l'onglet Actions
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: tests MediaType
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+      # Le profil ci vérifie le formatage au lieu de le corriger.
+      # -am construit aussi les modules dont tika-core dépend.
+      - name: Tests de MediaType
+        run: ./mvnw -B -pl tika-core -am test -Pci "-Dtest=MediaType*Test" -Dsurefire.failIfNoSpecifiedTests=false
+      - name: Rapports de tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapports-surefire
+          path: tika-core/target/surefire-reports/
+          if-no-files-found: ignore
+
+  mutation:
+    name: mutation PIT
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: tests
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'maven'
+      # PIT s'exécute sur tika-core seul : ses dépendances internes doivent
+      # d'abord être installées dans le dépôt Maven local.
+      - name: Installation des modules requis
+        run: ./mvnw -B -pl tika-core -am install -DskipTests
+      - name: Analyse de mutation de MediaType
+        run: ./mvnw -B -pl tika-core test-compile org.pitest:pitest-maven:mutationCoverage
+      - name: Rapport PIT
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-pit
+          path: tika-core/target/pit-reports/
+          if-no-files-found: ignore
